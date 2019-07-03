@@ -302,7 +302,7 @@ class ship:
         self.vel = 15
         self.width = 90     # not image width but the width of the rectangle around it
         self.moveCount = 0  # to switch between sprites
-        self.health = 900
+        self.health = 200
 
     def draw(self, win):
         if self.moveCount == 30:
@@ -493,7 +493,8 @@ def Step(action):
             else:
                 player.health = 0
             reward-=1
-                
+        elif (asteroid.y + asteroid.width) > player.y and (asteroid.x + asteroid.width // 2) < ((player.x +player.width //2) +3 * player.width) and (asteroid.x + asteroid.width // 2) > ((player.x +player.width //2) -3 * player.width) :
+        	reward+=0.5        
         for bullet in bullets:
             if bullet.y <= asteroid.y + asteroid.width - 5 and bullet.y > asteroid.y:
                 if bullet.x > asteroid.x - 5 and bullet.x < asteroid.x + asteroid.width - 5:
@@ -548,7 +549,7 @@ for i in range(pretrain_length):
     
     
     # If the episode is finished (we're dead 3x)
-    if done and deathcount == 3:
+    if done:
         # We finished the episode
         next_state = np.zeros(state.shape)
         #deathcount = 0
@@ -636,8 +637,8 @@ if training == True:
                 episode_rewards.append(reward)
                 
                 # If the game is finished
-                if done and deathcount == 3:
-                    deathcount = 0
+                if done:
+                    
                     # The episode ends so no next state
                     next_state = np.zeros((110,84), dtype=np.int)
                     
