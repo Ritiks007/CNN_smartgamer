@@ -238,7 +238,7 @@ class Memory():
 
 
 """
-This function will do the part
+
 With ϵϵ select a random action atat, otherwise select at=argmaxaQ(st,a)
 """
 def predict_action(explore_start, explore_stop, decay_rate, decay_step, state, actions):
@@ -247,7 +247,7 @@ def predict_action(explore_start, explore_stop, decay_rate, decay_step, state, a
     ## First we randomize a number
     exp_exp_tradeoff = np.random.rand()
 
-    # Here we'll use an improved version of our epsilon greedy strategy used in Q-learning notebook
+    # Using Improved version of our epsilon greedy strategy used in Q-learning notebook
     explore_probability = explore_stop + (explore_start - explore_stop) * np.exp(-decay_rate * decay_step)
     
     if (explore_probability > exp_exp_tradeoff):
@@ -541,13 +541,13 @@ for i in range(pretrain_length):
     action = possible_actions[choice]
     next_state, reward, done = Step(action)
     
-    #env.render()
+    
     
     # Stack the frames
     next_state, stacked_frames = stack_frames(stacked_frames, next_state, False)
     
     
-    # If the episode is finished (we're dead 3x)
+    # If the episode is finished (we're dead)
     if done:
         # We finished the episode
         next_state = np.zeros(state.shape)
@@ -749,7 +749,7 @@ with tf.Session() as sess:
             
             #Perform the action and get the next_state, reward, and done information
             next_state, reward, done = Step(action)
-#            env.render()
+
             
             total_rewards += reward
 
@@ -762,7 +762,7 @@ with tf.Session() as sess:
             next_state, stacked_frames = stack_frames(stacked_frames, next_state, False)
             state = next_state
             
-#    env.close()
+
 
 
 # In[ ]:
