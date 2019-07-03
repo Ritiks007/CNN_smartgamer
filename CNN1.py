@@ -288,12 +288,12 @@ sptSize = (128, 128)
 
 # defining class of our ship
 class ship:
-    static = [pyg.transform.scale(pyg.image.load('/home/ritik/Desktop/L1.png'), sptSize),
-              pyg.transform.scale(pyg.image.load('/home/ritik/Desktop/L1.png'), sptSize)]
-    flyRight = [pyg.transform.scale(pyg.image.load('/home/ritik/Desktop/L1.png'), sptSize),
-                pyg.transform.scale(pyg.image.load('/home/ritik/Desktop/L1.png'), sptSize)]
-    flyLeft = [pyg.transform.scale(pyg.image.load('/home/ritik/Desktop/L1.png'), sptSize),
-               pyg.transform.scale(pyg.image.load('/home/ritik/Desktop/L1.png'), sptSize)]
+    static = [pyg.transform.scale(pyg.image.load('/home/ritik/Desktop/s2.jpg'), sptSize),
+              pyg.transform.scale(pyg.image.load('/home/ritik/Desktop/s2.jpg'), sptSize)]
+    flyRight = [pyg.transform.scale(pyg.image.load('/home/ritik/Desktop/s2.jpg'), sptSize),
+                pyg.transform.scale(pyg.image.load('/home/ritik/Desktop/s2.jpg'), sptSize)]
+    flyLeft = [pyg.transform.scale(pyg.image.load('/home/ritik/Desktop/s2.jpg'), sptSize),
+               pyg.transform.scale(pyg.image.load('/home/ritik/Desktop/s2.jpg'), sptSize)]
 
     def __init__(self, x, y):
         self.x = x
@@ -333,7 +333,7 @@ class Asteroids:
         self.pop = False
         self.size = (s, s)
         self.health = s*2
-        self.img = pyg.transform.scale(pyg.image.load('/home/ritik/Desktop/e.png'), self.size)
+        self.img = pyg.transform.scale(pyg.image.load('/home/ritik/Desktop/a2.jpg'), self.size)
 
     def motion(self):
         if self.y < 810:
@@ -386,7 +386,7 @@ class shots():
 # Window setup
 
 win = pyg.display.set_mode(winSize)
-bg = pyg.image.load('/home/ritik/Desktop/b.jpg')
+bg = pyg.image.load('/home/ritik/Desktop/b2.jpg')
 pyg.display.set_caption('TheGame')
 startLocn = ((winSize[0] - sptSize[0])//2, winSize[1] - sptSize[1] - 10)
 player = ship(startLocn[0], startLocn[1])
@@ -492,16 +492,16 @@ def Step(action):
                 asteroid.pop = True
             else:
                 player.health = 0
-            reward-=1
-        elif (asteroid.y + asteroid.width) > player.y and (asteroid.x + asteroid.width // 2) < ((player.x +player.width //2) +3 * player.width) and (asteroid.x + asteroid.width // 2) > ((player.x +player.width //2) -3 * player.width) :
-        	reward+=0.5        
+            reward-=1.4
+        elif (asteroid.y + asteroid.width) > player.y and (asteroid.x + asteroid.width // 2) < ((player.x +player.width //2) +asteroid.width) and (asteroid.x + asteroid.width // 2) > ((player.x +player.width //2) - asteroid.width) :
+        	reward+=0.4        
         for bullet in bullets:
             if bullet.y <= asteroid.y + asteroid.width - 5 and bullet.y > asteroid.y:
                 if bullet.x > asteroid.x - 5 and bullet.x < asteroid.x + asteroid.width - 5:
                     bullet.pop = True
                     asteroid.health -= 150
                     score += 10
-                    reward+=0.5
+                    reward+=0.7
         if asteroid.health < 0:
             #hitSound.play()
             asteroid.pop = True
@@ -520,8 +520,7 @@ def Step(action):
             done = True
             deathcount+=1
     screen,missed = redrawWin()
-    if missed == True:
-        reward-=1
+    
     return screen,reward,done
 
 
