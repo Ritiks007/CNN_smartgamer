@@ -110,7 +110,7 @@ memory_size = 1000000          # Number of experiences the Memory can keep
 stack_size = 4                 # Number of frames stacked
 
 ### MODIFY THIS TO FALSE IF YOU JUST WANT TO SEE THE TRAINED AGENT
-training = False
+training = True
 
 
 # In[6]:
@@ -245,7 +245,7 @@ def predict_action(explore_start, explore_stop, decay_rate, decay_step, state, a
     ## EPSILON GREEDY STRATEGY
     # Choose action a from state s using epsilon greedy.
     ## First we randomize a number
-    exp_exp_tradeoff = np.random.rand()
+    exp_exp_tradeoff = 0.97#np.random.rand()
 
     # Using Improved version of our epsilon greedy strategy used in Q-learning notebook
     explore_probability = explore_stop + (explore_start - explore_stop) * np.exp(-decay_rate * decay_step)
@@ -263,6 +263,10 @@ def predict_action(explore_start, explore_stop, decay_rate, decay_step, state, a
         # Take the biggest Q value (= the best action)
         choice = np.argmax(Qs)
         action = possible_actions[choice]
+        print(action)
+        print(Qs)
+
+
                 
                 
     return action, explore_probability
@@ -302,7 +306,7 @@ class ship:
         self.vel = 15
         self.width = 90     # not image width but the width of the rectangle around it
         self.moveCount = 0  # to switch between sprites
-        self.health = 200
+        self.health = 900
 
     def draw(self, win):
         if self.moveCount == 30:
@@ -399,7 +403,7 @@ play = True
 lastPosition = 100
 bulletInterval = 5
 deathcount = 0
-asteroidInterval = 18
+asteroidInterval = 50  #18
 
 
 # In[15]:
@@ -414,7 +418,7 @@ def Reset():
     #start = True
     lastPosition = 100
     bulletInterval = 5
-    asteroidInterval = 18
+    asteroidInterval = 50 #18
     player = ship(startLocn[0], startLocn[1])
     bullets = []
     asteroids = []
@@ -466,6 +470,7 @@ def redrawWin():
 def Step(action):
     global player,bullets,asteroids,score,end,done,deathcount,start,play,lastPosition,bulletInterval,asteroidInterval
     action = tuple(action)
+    #print(action)
     if action == (1,0,0,0) and player.x > 0:
         player.dir = -1
         player.x -= player.vel
@@ -492,7 +497,7 @@ def Step(action):
                 asteroid.pop = True
             else:
                 player.health = 0
-            reward-=1
+            reward-=50
         #elif (asteroid.y + asteroid.width) > player.y and (asteroid.x + asteroid.width // 2) < ((player.x +player.width //2) +asteroid.width) and (asteroid.x + asteroid.width // 2) > ((player.x +player.width //2) - asteroid.width) :
         #	reward+=0.4       
         for bullet in bullets:
@@ -501,19 +506,20 @@ def Step(action):
                     bullet.pop = True
                     asteroid.health -= 150
                     score += 10
-                    reward+=0.4
+                    reward+=40
         if asteroid.health < 0:
             #hitSound.play()
             asteroid.pop = True
-            reward+=1
-    
+            reward+=100
+    if reward !=0:
+    	print(reward)
     if asteroidInterval > 19:
         asteroidInterval = 1
         size = random.randint(100, 200)
         pos_x = random.randint(0, 800)
         if abs(lastPosition - pos_x) > 300 and (pos_x - size // 2) < winSize[0]:
             lastPosition = pos_x
-            asteroids.append(Asteroids(pos_x, size))
+            asteroids.append(Asteroids(700, size))
     else:
         asteroidInterval += 1    
     if player.health == 0:
@@ -683,7 +689,7 @@ if training == True:
 
                 # Get Q values for next_state 
                 Qs_next_state = sess.run(DQNetwork.output, feed_dict = {DQNetwork.inputs_: next_states_mb})
-                
+
                 # Set Q_target = r if the episode ends at s+1, otherwise set Q_target = r + gamma*maxQ(s', a')
                 for i in range(0, len(batch)):
                     terminal = dones_mb[i]
@@ -694,6 +700,7 @@ if training == True:
                         
                     else:
                         target = rewards_mb[i] + gamma * np.max(Qs_next_state[i])
+                        #print(rewards_mb[i],gamma,np.max(Qs_next_state[i]))
                         target_Qs_batch.append(target)
                         
 
@@ -746,7 +753,7 @@ with tf.Session() as sess:
             # Take the biggest Q value (= the best action)
             choice = np.argmax(Qs)
             action = possible_actions[choice]
-            
+
             #Perform the action and get the next_state, reward, and done information
             next_state, reward, done = Step(action)
 
